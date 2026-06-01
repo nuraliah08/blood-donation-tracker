@@ -111,12 +111,12 @@ The system was developed and tested using Google Chrome as required by the assig
 ## GitHub Repository
 
 Repository Link:
-(Add your GitHub repository URL here)
+https://github.com/nuraliah08/blood-donation-tracker
 
 ## Live Website
 
 GitHub Pages Link:
-(https://nuraliah08.github.io/blood-donation-tracker/)
+https://nuraliah08.github.io/blood-donation-tracker/
 
 ---
 
