@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Blood Donation Tracker</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+   body {
+        background-image: url('https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1600');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    .navbar-brand {
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    .navbar-brand i {
+        margin-right: 8px;
+    }
+    
+
+    .nav-link {
+        font-weight: 500;
+        margin: 0 5px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        transform: translateY(-2px);
+    }
+
+    .chart-container {
+        background: rgba(255, 255, 255, 0.822);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+    }
+
+    .chart-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #242424;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #C62828;
+        display: inline-block;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+    }
+
+    .table th {
+        background-color: #C62828;
+        color: white;
+        font-weight: 500;
+        border: none;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .badge-status {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .badge-completed {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-scheduled {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+    .welcome-banner {
+        background: linear-gradient(135deg, #e44242e1 0%, #ae1010dc 100%);
+        border-radius: 15px;
+        padding: 25px;
+        color: white;
+        margin-bottom: 25px;
+        margin-top: 20px;
+    }
+
+    .footer {
+        
+        padding: 20px 0;
+        margin-top: 40px;
+        text-align: center;
+        color: #ffffff;
+        
+    }
+
+    @media(max-width:768px){
+    .welcome-banner h2 {
+        font-size: 1.1rem;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    .table th, .table td {
+        font-size: 0.7rem;
+        padding: 8px 5px;
+    }
+    
+    .badge-status {
+        font-size: 0.6rem;
+        padding: 3px 6px;
+    }
+    
+    .table-container h5 {
+        font-size: 0.85rem;
+    }
+    
+    .btn-outline-custom {
+        padding: 5px 12px;
+        font-size: 0.75rem;
+    }
+    
+    .chart-title {
+        font-size: 0.9rem;
+    }
+    
+    .list-group-item {
+        padding: 10px 12px;
+    }
+    
+    .list-group-item strong {
+        font-size: 0.8rem;
+    }
+    
+    .list-group-item small {
+        font-size: 0.65rem;
+    }
+    
+    .badge {
+        font-size: 0.65rem;
+    }
+    
+    .footer p {
+        font-size: 0.7rem;
+    }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+    <img src="https://hopevillagesofamerica.org/site/wp-content/uploads/2022/12/HandsofHope.png" width="40"> Sunway Medical Centre
+</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="donations.html">
+                         <i class="fas fa-syringe"></i> Donations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="inventory.html">
+                        <i class="fas fa-boxes"></i> Blood Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+                <li class="nav-item">
+    <a class="nav-link" href="settings.html">
+        <i class="fas fa-cog"></i> 
+    </a>
+</li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container my-4">
+    
+    <div class="welcome-banner">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2></i> Welcome back !</h2>
+                <p class="mb-0">Monitor blood donation activities at Sunway Medical Centre Blood Bank.</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <i class="fas fa-heartbeat" style="font-size: 3rem; opacity: 0.8;"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-7 mb-4">
+            <div class="chart-container">
+                <h5 class="chart-title">
+                    <i class="fas fa-chart-line"></i> Donation Trends (Monthly)
+                </h5>
+                <canvas id="donationTrendChart" height="250"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-5 mb-4">
+            <div class="chart-container">
+                <h5 class="chart-title">
+                    <i class="fas fa-chart-pie"></i> Blood Type Distribution
+                </h5>
+                <canvas id="bloodTypeChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">
+                <i class="fas fa-clock"></i> Recent Donation Activity
+            </h5>
+            <a href="donations.html" class="btn btn-sm btn-outline-danger">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Donor Name</th>
+                        <th>Blood Type</th>
+                        <th>Quantity (ml)</th>
+                        <th>Donation Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="recentDonationsTable">
+                    <!-- Sneak peek data (only 5 records) -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="chart-container">
+            <h5 class="chart-title">
+                <i class="fas fa-calendar-alt"></i> Upcoming Donation Schedule
+            </h5>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-calendar-day text-danger me-2"></i>
+                        <strong>June 20, 2024</strong><br>
+                        <small class="text-muted">Sunway Pyramid Mall</small>
+                    </div>
+                    <span class="badge bg-danger">8 donors registered</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-calendar-day text-danger me-2"></i>
+                        <strong>June 22, 2024</strong><br>
+                        <small class="text-muted">Pusat Komuniti Bandar Sunway</small>
+                    </div>
+                    <span class="badge bg-danger">12 donors registered</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-calendar-day text-danger me-2"></i>
+                        <strong>June 25, 2024</strong><br>
+                        <small class="text-muted">Universiti Malaya (UM)</small>
+                    </div>
+                    <span class="badge bg-danger">5 donors registered</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-calendar-day text-danger me-2"></i>
+                        <strong>June 28, 2024</strong><br>
+                        <small class="text-muted">Sunway Medical Centre (Main Lobby)</small>
+                    </div>
+                    <span class="badge bg-danger">20 donors registered</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="container">
+        <p class="mb-0">
+     
+            Sunway Medical Centre Blood Bank | 
+            &copy; 2024
+        </p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+     const allDonations = [
+        { name: "Ahmad Bin Abdullah", bloodType: "O+", quantity: "450 ml", date: "2024-06-15", status: "completed" },
+        { name: "Tan Wei Ming", bloodType: "A+", quantity: "450 ml", date: "2024-06-14", status: "completed" },
+        { name: "Kumar a/l Rajan", bloodType: "B+", quantity: "450 ml", date: "2024-06-20", status: "scheduled" },
+        { name: "Nurul Aisyah Bt Mohd", bloodType: "AB+", quantity: "450 ml", date: "2024-06-13", status: "completed" },
+        { name: "Lim Siew Ling", bloodType: "O+", quantity: "450 ml", date: "2024-06-22", status: "scheduled" }
+    ];
+    
+    const recentDonations = allDonations.slice(0, 5);
+    
+    const tbody = document.getElementById('recentDonationsTable');
+    
+    recentDonations.forEach(donation => {
+        const row = `
+            <tr>
+                <td> ${donation.name}</td>
+                <td><span class="badge bg-danger">${donation.bloodType}</span></td>
+                <td>${donation.quantity}</td>
+                <td>${donation.date}</td>
+                <td>
+                    <span class="badge-status ${donation.status === 'completed' ? 'badge-completed' : 'badge-scheduled'}">
+                        ${donation.status === 'completed' ? 'Completed' : 'Scheduled'}
+                    </span>
+                 </td>
+             </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+    
+    const ctx1 = document.getElementById('donationTrendChart').getContext('2d');
+    new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Donations (Units)',
+                data: [245, 278, 310, 298, 345, 368, 390, 412, 385, 402, 420, 445],
+                borderColor: '#C62828',
+                backgroundColor: 'rgba(198, 40, 40, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#C62828',
+                pointBorderColor: '#fff',
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Donations'
+                    }
+                }
+            }
+        }
+    });
+    
+    const ctx2 = document.getElementById('bloodTypeChart').getContext('2d');
+    new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: ['O+ (38%)', 'A+ (32%)', 'B+ (18%)', 'AB+ (7%)', 'O- (5%)'],
+            datasets: [{
+                data: [38, 32, 18, 7, 5],
+                backgroundColor: ['#C62828', '#E53935', '#EF5350', '#EF9A9A', '#FFCDD2'],
+                borderWidth: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+    
+    function logout() {
+        window.location.href = 'index.html';
+    }
+</script>
+
+</body>
+</html>
+

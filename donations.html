@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Donations | Blood Donation Tracker</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+   body {
+        background-image: url('https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1600');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+    .navbar-brand {
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    .navbar-brand i {
+        margin-right: 8px;
+    }
+
+    .nav-link {
+        font-weight: 500;
+        margin: 0 5px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        transform: translateY(-2px);
+    }
+
+    .table-container {
+        background: rgba(255, 255, 255, 0.868);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(110, 33, 33, 0.05);
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+        border-bottom: 2px solid #ffffff85;
+        padding-bottom: 15px;
+    }
+
+    .page-header h2 {
+        color: #C62828;
+        font-weight: bold;
+        font-size: 1.8rem;
+    }
+
+    .table th {
+        background-color: #C62828;
+        color: white;
+        font-weight: 500;
+        border: none;
+        padding: 12px 15px;
+    }
+
+    .table td {
+        vertical-align: middle;
+        padding: 12px 15px;
+    }
+
+    .table tbody tr:hover {
+        background-color: #fff5f5;
+        cursor: pointer;
+    }
+
+    .badge-status {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .badge-completed {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-scheduled {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+    .stats-badge {
+        background: linear-gradient(135deg, #C62828, #8B0000);
+        color: white;
+        padding: 8px 18px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+    }
+
+    .search-box {
+        margin-bottom: 20px;
+    }
+
+    .filter-btn {
+        margin-right: 8px;
+        margin-bottom: 10px;
+        border-radius: 20px;
+        padding: 5px 15px;
+    }
+
+    .filter-btn.active {
+        background-color: #C62828;
+        color: white;
+        border-color: #C62828;
+    }
+
+    .footer {
+        padding: 20px 0;
+        margin-top: 40px;
+        text-align: center;
+        color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+        .table-container {
+            padding: 15px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .page-header h2 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <img src="https://hopevillagesofamerica.org/site/wp-content/uploads/2022/12/HandsofHope.png" width="40"> Sunway Medical Centre 
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="donations.html">
+                        <i class="fas fa-syringe"></i> Donations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="inventory.html">
+                        <i class="fas fa-boxes"></i> Blood Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+                <li class="nav-item">
+    <a class="nav-link" href="settings.html">
+        <i class="fas fa-cog"></i> 
+    </a>
+</li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="table-container">
+        <div class="page-header d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h2><i class="fas fa-history"></i> Donation Records</h2>
+                <p class="text-muted mb-0">Complete history of all blood donations to our blood bank</p>
+            </div>
+            <div class="mt-2 mt-md-0">
+                <span class="stats-badge">
+                    <i class="fas fa-chart-line"></i> Total: <span id="totalCount">0</span> Donations
+                </span>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-danger text-white"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search by donor name...">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="d-flex flex-wrap">
+                        <button class="btn btn-sm btn-outline-danger filter-btn active" onclick="filterDonations('all')">All</button>
+                        <button class="btn btn-sm btn-outline-success filter-btn" onclick="filterDonations('completed')">
+                            <i class="fas fa-check-circle"></i> Completed
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning filter-btn" onclick="filterDonations('scheduled')">
+                            <i class="fas fa-calendar"></i> Scheduled
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Donor Name</th>
+                        <th><i class="fas fa-tint"></i> Blood Type</th>
+                        <th><i class="fas fa-flask"></i> Quantity</th>
+                        <th><i class="fas fa-calendar-day"></i> Donation Date</th>
+                        <th><i class="fas fa-chart-simple"></i> Status</th>
+                    </tr>
+                </thead>
+                <tbody id="donationsTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+            <small class="text-muted" id="recordCount">Showing 0 records</small>
+            <small class="text-muted">
+                <i class="fas fa-droplet text-danger"></i> Every donation saves up to 3 lives
+            </small>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="container">
+        <p class="mb-0">
+            
+            Sunway Medical Centre Blood Bank | 
+            &copy; 2024
+        </p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const allDonations = [
+    { name: "Ahmad Bin Abdullah", bloodType: "O+", quantity: "450 ml", date: "2024-06-15", status: "completed" },
+    { name: "Tan Wei Ming", bloodType: "A+", quantity: "450 ml", date: "2024-06-14", status: "completed" },
+    { name: "Kumar a/l Rajan", bloodType: "B+", quantity: "450 ml", date: "2024-06-20", status: "scheduled" },
+    { name: "Nurul Aisyah Bt Mohd", bloodType: "AB+", quantity: "450 ml", date: "2024-06-13", status: "completed" },
+    { name: "Lim Siew Ling", bloodType: "O+", quantity: "450 ml", date: "2024-06-22", status: "scheduled" },
+    { name: "Mageswary a/p Subramaniam", bloodType: "A-", quantity: "450 ml", date: "2024-06-12", status: "completed" },
+    { name: "Muhammad Syafiq Bin Rosli", bloodType: "O+", quantity: "450 ml", date: "2024-06-25", status: "scheduled" },
+    { name: "Chong Kar Yan", bloodType: "B-", quantity: "450 ml", date: "2024-06-11", status: "completed" },
+    { name: "Siti Norhaliza Bt Zakaria", bloodType: "AB-", quantity: "450 ml", date: "2024-06-27", status: "scheduled" },
+    { name: "Ravindran a/l Govindasamy", bloodType: "O+", quantity: "450 ml", date: "2024-06-10", status: "completed" },
+    { name: "Teoh Kim Hock", bloodType: "A+", quantity: "450 ml", date: "2024-06-29", status: "scheduled" },
+    { name: "Norafidah Bt Hassan", bloodType: "B+", quantity: "450 ml", date: "2024-06-09", status: "completed" }
+];
+
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    function renderDonationsTable() {
+        let filteredData = [...allDonations];
+        
+        if (currentFilter !== 'all') {
+            filteredData = filteredData.filter(d => d.status === currentFilter);
+        }
+        
+        if (currentSearch !== '') {
+            filteredData = filteredData.filter(d => 
+                d.name.toLowerCase().includes(currentSearch.toLowerCase())
+            );
+        }
+        
+        const tbody = document.getElementById('donationsTableBody');
+        tbody.innerHTML = '';
+        
+        if (filteredData.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-5">
+                        <i class="fas fa-search fa-2x text-muted mb-2 d-block"></i>
+                        <span class="text-muted">No donation records found</span>
+                    </td>
+                </tr>
+            `;
+        } else {
+            filteredData.forEach(donation => {
+                const row = `
+                    <tr>
+                        <td>${donation.name}</td>
+                        <td><span class="badge bg-danger">${donation.bloodType}</span></td>
+                        <td>${donation.quantity}</td>
+                        <td>${donation.date}</td>
+                        <td>
+                            <span class="badge-status ${donation.status === 'completed' ? 'badge-completed' : 'badge-scheduled'}">
+                                ${donation.status === 'completed' ? '<i class="fas fa-check-circle"></i> Completed' : '<i class="fas fa-calendar"></i> Scheduled'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+        
+        document.getElementById('recordCount').innerHTML = `Showing ${filteredData.length} of ${allDonations.length} records`;
+        document.getElementById('totalCount').innerHTML = allDonations.length;
+    }
+    
+    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+        currentSearch = e.target.value;
+        renderDonationsTable();
+    });
+    
+    function filterDonations(filter) {
+        currentFilter = filter;
+        renderDonationsTable();
+        
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            if (filter === 'all' && btn.textContent.trim() === 'All') {
+                btn.classList.add('active');
+            } else if (filter === 'completed' && btn.textContent.includes('Completed')) {
+                btn.classList.add('active');
+            } else if (filter === 'scheduled' && btn.textContent.includes('Scheduled')) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    function logout() {
+        window.location.href = 'index.html';
+    }
+    
+    renderDonationsTable();
+</script>
+
+</body>
+</html>

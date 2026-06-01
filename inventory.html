@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blood Inventory | Blood Donation Tracker</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+   body {
+        background-image: url('https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1600');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    .navbar-brand {
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    .navbar-brand i {
+        margin-right: 8px;
+    }
+
+    .nav-link {
+        font-weight: 500;
+        margin: 0 5px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        transform: translateY(-2px);
+    }
+
+    .table-container {
+        background: rgba(255, 255, 255, 0.806);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 15px;
+    }
+
+    .page-header h2 {
+        color: #C62828;
+        font-weight: bold;
+        font-size: 1.8rem;
+    }
+
+    .table th {
+        background-color: #C62828;
+        color: white;
+        font-weight: 500;
+        border: none;
+        padding: 12px 15px;
+    }
+
+    .table td {
+        vertical-align: middle;
+        padding: 12px 15px;
+    }
+
+    .table tbody tr:hover {
+        background-color: #fff5f5;
+        cursor: pointer;
+    }
+
+    .inventory-card {
+        background: rgba(247, 247, 247, 0.783);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+        transition: transform 0.3s;
+    }
+
+    .inventory-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .blood-type {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #C62828;
+    }
+
+    .stock-level {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .status-critical {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .status-low {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+    .status-normal {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status-high {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .stats-badge {
+        background: linear-gradient(135deg, #C62828, #8B0000);
+        color: white;
+        padding: 8px 18px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+    }
+
+    .search-box {
+        margin-bottom: 20px;
+    }
+
+    .filter-btn {
+        margin-right: 8px;
+        margin-bottom: 10px;
+        border-radius: 20px;
+        padding: 5px 15px;
+    }
+
+    .filter-btn.active {
+        background-color: #C62828;
+        color: white;
+        border-color: #C62828;
+    }
+
+    .footer {
+        padding: 20px 0;
+        margin-top: 40px;
+        text-align: center;
+        color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+        .table-container {
+            padding: 15px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .page-header h2 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <img src="https://hopevillagesofamerica.org/site/wp-content/uploads/2022/12/HandsofHope.png" width="40"> Sunway Medical Centre 
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="donations.html">
+                         <i class="fas fa-syringe"></i> Donations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="inventory.html">
+                        <i class="fas fa-boxes"></i> Blood Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+                <li class="nav-item">
+    <a class="nav-link" href="settings.html">
+        <i class="fas fa-cog"></i> 
+    </a>
+</li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+<div class="row mb-4 mt-3">
+    <div class="col-md-3 col-6 mb-3">
+        <div class="inventory-card">
+            <h3 class="blood-type">Total Units</h3>
+            <p class="stock-level" id="totalUnits">0</p>
+            <small class="text-muted">Available for hospitals</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="inventory-card">
+            <h3 class="blood-type">Low Stock</h3>
+            <p class="stock-level" id="lowStockCount">0</p>
+            <small class="text-muted">Types needing attention</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="inventory-card">
+            <h3 class="blood-type">Expiring Soon</h3>
+            <p class="stock-level" id="expiringCount">0</p>
+            <small class="text-muted">Within 7 days</small>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+        <div class="inventory-card">
+            <h3 class="blood-type">Lives Ready</h3>
+            <p class="stock-level" id="livesReady">0</p>
+            <small class="text-muted">Potential lives saved</small>
+        </div>
+    </div>
+</div>
+
+    <div class="table-container">
+        <div class="page-header d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h2><i class="fas fa-boxes"></i> Blood Inventory</h2>
+                <p class="text-muted mb-0">Current blood stock levels by type</p>
+            </div>
+            <div class="mt-2 mt-md-0">
+                <span class="stats-badge">
+                    <i class="fas fa-chart-line"></i> Last updated: <span id="lastUpdated">2024-06-18</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-danger text-white"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search by blood type...">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="d-flex flex-wrap">
+                        <button class="btn btn-sm btn-outline-danger filter-btn active" onclick="filterInventory('all')">All</button>
+                        <button class="btn btn-sm btn-outline-warning filter-btn" onclick="filterInventory('low')">Low Stock</button>
+                        <button class="btn btn-sm btn-outline-success filter-btn" onclick="filterInventory('normal')">Normal Stock</button>
+                        <button class="btn btn-sm btn-outline-info filter-btn" onclick="filterInventory('high')">High Stock</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-tint"></i> Blood Type</th>
+                        <th><i class="fas fa-box"></i> Units Available</th>
+                        <th><i class="fas fa-chart-line"></i> Status</th>
+                        <th><i class="fas fa-calendar"></i> Expiry Date</th>
+                        <th><i class="fas fa-arrow-up"></i> Demand Level</th>
+                        <th><i class="fas fa-flag"></i> Priority</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTableBody">
+                    <!-- Data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+            <small class="text-muted" id="recordCount">Showing 0 records</small>
+            <small class="text-muted">
+                <i class="fas fa-droplet text-danger"></i> Target: Maintain 50+ units per blood type
+            </small>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <div class="container">
+        <p class="mb-0">
+             
+            Sunway Medical Centre Blood Bank | 
+            &copy; 2024
+        </p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const inventoryData = [
+        { bloodType: "O+", units: 85, status: "normal", expiryDate: "2024-07-15", demandLevel: "High", priority: "Medium" },
+        { bloodType: "O-", units: 23, status: "low", expiryDate: "2024-06-25", demandLevel: "Critical", priority: "High" },
+        { bloodType: "A+", units: 62, status: "normal", expiryDate: "2024-07-20", demandLevel: "High", priority: "Medium" },
+        { bloodType: "A-", units: 18, status: "low", expiryDate: "2024-06-22", demandLevel: "High", priority: "High" },
+        { bloodType: "B+", units: 45, status: "normal", expiryDate: "2024-07-10", demandLevel: "Medium", priority: "Low" },
+        { bloodType: "B-", units: 12, status: "critical", expiryDate: "2024-06-20", demandLevel: "Critical", priority: "High" },
+        { bloodType: "AB+", units: 35, status: "normal", expiryDate: "2024-07-18", demandLevel: "Low", priority: "Low" },
+        { bloodType: "AB-", units: 8, status: "critical", expiryDate: "2024-06-19", demandLevel: "Medium", priority: "High" }
+    ];
+
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    function getStatusClass(status) {
+        switch(status) {
+            case 'critical': return 'status-critical';
+            case 'low': return 'status-low';
+            case 'normal': return 'status-normal';
+            default: return 'status-normal';
+        }
+    }
+
+    function getPriorityBadge(priority) {
+        if(priority === 'High') {
+            return '<span class="badge bg-danger">⚠️ High Priority</span>';
+        } else if(priority === 'Medium') {
+            return '<span class="badge bg-warning">📋 Medium</span>';
+        } else {
+            return '<span class="badge bg-secondary">✅ Low</span>';
+        }
+    }
+
+    function updateSummaryCards() {
+        const totalUnits = inventoryData.reduce((sum, item) => sum + item.units, 0);
+        const lowStockCount = inventoryData.filter(item => item.status === 'low' || item.status === 'critical').length;
+        const expiringCount = inventoryData.filter(item => {
+            const expiryDate = new Date(item.expiryDate);
+            const today = new Date();
+            const daysDiff = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+            return daysDiff <= 7;
+        }).length;
+        const livesReady = totalUnits * 3; // Each unit can save 3 lives
+        
+        document.getElementById('totalUnits').innerHTML = totalUnits;
+        document.getElementById('lowStockCount').innerHTML = lowStockCount;
+        document.getElementById('expiringCount').innerHTML = expiringCount;
+        document.getElementById('livesReady').innerHTML = livesReady;
+    }
+
+    function renderInventoryTable() {
+        let filteredData = [...inventoryData];
+        
+        if (currentFilter !== 'all') {
+            filteredData = filteredData.filter(item => item.status === currentFilter);
+        }
+        
+        if (currentSearch !== '') {
+            filteredData = filteredData.filter(item => 
+                item.bloodType.toLowerCase().includes(currentSearch.toLowerCase())
+            );
+        }
+        
+        const tbody = document.getElementById('inventoryTableBody');
+        tbody.innerHTML = '';
+        
+        if (filteredData.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center py-5">
+                        <i class="fas fa-search fa-2x text-muted mb-2 d-block"></i>
+                        <span class="text-muted">No inventory records found</span>
+                    </td>
+                </tr>
+            `;
+        } else {
+            filteredData.forEach(item => {
+                const row = `
+                    <tr>
+                        <td><span class="blood-type" style="font-size:1rem;">🩸 ${item.bloodType}</span></td>
+                        <td><strong>${item.units}</strong> units</td>
+                        <td><span class="status-badge ${getStatusClass(item.status)}">${item.status.toUpperCase()}</span></td>
+                        <td>${item.expiryDate} ${isExpiringSoon(item.expiryDate) ? '<i class="fas fa-exclamation-circle text-warning"></i>' : ''}</td>
+                        <td>${item.demandLevel}</td>
+                        <td>${getPriorityBadge(item.priority)}</td>
+                    </td>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+        
+        document.getElementById('recordCount').innerHTML = `Showing ${filteredData.length} of ${inventoryData.length} blood types`;
+    }
+    
+    function isExpiringSoon(expiryDate) {
+        const expiry = new Date(expiryDate);
+        const today = new Date();
+        const daysDiff = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+        return daysDiff <= 7 && daysDiff > 0;
+    }
+    
+    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+        currentSearch = e.target.value;
+        renderInventoryTable();
+    });
+    
+    function filterInventory(filter) {
+        currentFilter = filter;
+        renderInventoryTable();
+        
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            if (filter === 'all' && btn.textContent.trim() === 'All') {
+                btn.classList.add('active');
+            } else if (filter === 'low' && btn.textContent.includes('Low')) {
+                btn.classList.add('active');
+            } else if (filter === 'normal' && btn.textContent.includes('Normal')) {
+                btn.classList.add('active');
+            } else if (filter === 'high' && btn.textContent.includes('High')) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    document.getElementById('lastUpdated').innerHTML = new Date().toISOString().slice(0,10);
+    
+    function logout() {
+        window.location.href = 'index.html';
+    }
+    
+    updateSummaryCards();
+    renderInventoryTable();
+</script>
+
+</body>
+</html>

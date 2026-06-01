@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Settings | Blood Donation Tracker</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+body{
+    background-image:url('https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1600');
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+ body {
+        background-image: url('https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=1600');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    .navbar-brand {
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+
+    .navbar-brand i {
+        margin-right: 8px;
+    }
+
+    .nav-link {
+        font-weight: 500;
+        margin: 0 5px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        transform: translateY(-2px);
+    }
+
+
+.settings-card{
+    background:rgba(255,255,255,0.9);
+    border-radius:20px;
+    padding:30px;
+    margin-top:30px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.page-title{
+    color:#C62828;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+.btn-save{
+    background:#C62828;
+    color:white;
+    border:none;
+    padding:10px 25px;
+    border-radius:10px;
+}
+
+.btn-save:hover{
+    background:#8B0000;
+}
+.footer {
+        padding: 20px 0;
+        margin-top: 40px;
+        text-align: center;
+        color: #ffffff;
+    }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <img src="https://hopevillagesofamerica.org/site/wp-content/uploads/2022/12/HandsofHope.png" width="40"> Sunway Medical Centre 
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="donations.html">
+                        <i class="fas fa-syringe"></i> Donations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="inventory.html">
+                        <i class="fas fa-boxes"></i> Blood Inventory
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+                <li class="nav-item">
+    <a class="nav-link active" href="settings.html">
+        <i class="fas fa-cog"></i> 
+    </a>
+</li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+<div class="settings-card">
+
+<h2 class="page-title">
+<i class="fas fa-user-cog"></i>
+Account Settings
+</h2>
+
+<form onsubmit="return saveProfile()">
+
+<div class="mb-3">
+<label class="form-label">Full Name</label>
+<input type="text"
+id="fullname"
+class="form-control">
+</div>
+
+<div class="mb-3">
+<label class="form-label">Email</label>
+<input type="email"
+id="email"
+class="form-control">
+</div>
+
+<div class="mb-3">
+<label class="form-label">Phone Number</label>
+<input type="text"
+id="phone"
+class="form-control">
+</div>
+
+<hr>
+
+<h5 class="text-danger">
+<i class="fas fa-lock"></i>
+Change Password
+</h5>
+
+<div class="mb-3">
+<label class="form-label">New Password</label>
+<input type="password"
+id="newPassword"
+class="form-control">
+</div>
+
+<div class="mb-3">
+<label class="form-label">Confirm Password</label>
+<input type="password"
+id="confirmPassword"
+class="form-control">
+</div>
+
+<div id="message"
+class="alert alert-success"
+style="display:none;">
+Profile Updated Successfully
+</div>
+
+<button type="submit"
+class="btn-save">
+<i class="fas fa-save"></i>
+Save Changes
+</button>
+
+</form>
+
+</div>
+
+</div>
+<div class="footer">
+    <div class="container">
+        <p class="mb-0">
+             
+            Sunway Medical Centre Blood Bank | 
+            &copy; 2024
+        </p>
+    </div>
+</div>
+
+<script>
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+const users =
+JSON.parse(localStorage.getItem("registeredUsers")) || [];
+
+if(currentUser){
+
+    const user = users.find(
+        u => u.username === currentUser.username
+    );
+
+    if(user){
+
+        document.getElementById("fullname").value =
+        user.fullname;
+
+        document.getElementById("email").value =
+        user.email;
+
+        document.getElementById("phone").value =
+        user.phone;
+    }
+}
+
+function saveProfile(){
+
+    const fullname =
+    document.getElementById("fullname").value;
+
+    const email =
+    document.getElementById("email").value;
+
+    const phone =
+    document.getElementById("phone").value;
+
+    const newPassword =
+    document.getElementById("newPassword").value;
+
+    const confirmPassword =
+    document.getElementById("confirmPassword").value;
+
+    const userIndex =
+    users.findIndex(
+        u => u.username === currentUser.username
+    );
+
+    if(userIndex === -1){
+        return false;
+    }
+
+    users[userIndex].fullname = fullname;
+    users[userIndex].email = email;
+    users[userIndex].phone = phone;
+
+    if(newPassword !== ""){
+
+        if(newPassword !== confirmPassword){
+
+            alert("Passwords do not match");
+            return false;
+        }
+
+        users[userIndex].password =
+        newPassword;
+    }
+
+    localStorage.setItem(
+        "registeredUsers",
+        JSON.stringify(users)
+    );
+
+    document.getElementById("message")
+    .style.display = "block";
+
+    setTimeout(() => {
+        document.getElementById("message")
+        .style.display = "none";
+    },3000);
+
+    return false;
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
