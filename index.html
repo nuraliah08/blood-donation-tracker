@@ -319,7 +319,6 @@ for <strong>Sunway Medical Centre</strong> Blood Bank.
 
 <div class="tab-content">
     
-    <!-- Login Tab with Forgot Password -->
     <div class="tab-pane fade show active" id="login" role="tabpanel">
         <form onsubmit="return loginUser()">
             <div class="mb-3">
@@ -342,7 +341,6 @@ for <strong>Sunway Medical Centre</strong> Blood Bank.
         </form>
     </div>
 
-    <!-- Register Tab -->
     <div class="tab-pane fade" id="register" role="tabpanel">
         <form onsubmit="return registerUser()">
             <div class="mb-3">
@@ -393,7 +391,6 @@ for <strong>Sunway Medical Centre</strong> Blood Bank.
 
 </div>
 
-<!-- Forgot Password Modal -->
 <div class="modal fade" id="forgotPasswordModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -527,7 +524,6 @@ function registerUser(){
     return false;
 }
 
-// Forgot Password functionality
 document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
     e.preventDefault();
     document.getElementById('forgotUsername').value = '';
@@ -550,7 +546,6 @@ document.getElementById('resetPasswordBtn').addEventListener('click', function()
         return;
     }
     
-    // Find user by username or email
     const user = registeredUsers.find(u => u.username === userInput || u.email === userInput);
     
     if(!user) {
@@ -559,20 +554,17 @@ document.getElementById('resetPasswordBtn').addEventListener('click', function()
         return;
     }
     
-    // Generate random temporary password
     const tempPassword = Math.random().toString(36).slice(-8);
     
-    // Update user's password
     user.password = tempPassword;
     localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
     
     successDiv.innerHTML = `Your password has been reset!<br><strong>Temporary Password: ${tempPassword}</strong><br>Please login and change your password in Settings.`;
     successDiv.classList.remove('d-none');
     
-    // Clear input
+    
     document.getElementById('forgotUsername').value = '';
     
-    // Auto close modal after 5 seconds
     setTimeout(() => {
         const modal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
         if(modal) modal.hide();
